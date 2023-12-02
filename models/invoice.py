@@ -1,4 +1,4 @@
-# Model Menu
+# Model Invoice
 class Invoice:
     def __init__(self, name, description):
         self.name = name

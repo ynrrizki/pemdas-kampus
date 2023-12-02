@@ -16,7 +16,7 @@ def show_welcome():
     # Menghitung panjang teks dan lebar garis pembatas
     welcome_length = len(welcome_text)
     esteh_length = len(esteh_text)
-    divider_width = 45  # Lebar garis pembatas
+    divider_width = 65  # Lebar garis pembatas
 
     # Menghitung jumlah spasi yang diperlukan di sebelah kiri dan kanan teks selamat datang
     welcome_left_padding = (divider_width - welcome_length) // 2
