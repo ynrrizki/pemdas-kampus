@@ -5,28 +5,6 @@ from utils.format_date import format_date
 from models.invoice import Invoice
 from views.show_form import discount_calculate
 
-#  Invoice Berhasil Dibuat
-#  Tanggal : 27, November 2023
-#  Nama    : Yanto
-#  -----------------------------------------------------------------
-#  Menu           : ES THAI TEA MEDIUM
-#  Jumlah Pesanan : 3
-#  Harga Satuan   : Rp5.000,00
-#  Diskon         : Rp500,00
-#  PPN (10%)      : Rp1.450,00
-#  -----------------------------------------------------------------
-#  Menu           : ES THAI TEA LARGE
-#  Jumlah Pesanan : 3
-#  Harga Satuan   : Rp10.000,00
-#  Diskon         : Rp1.000,00
-#  PPN (10%)      : Rp2.900,00
-#  -----------------------------------------------------------------
-#  Total Pembayaran     : Rp45.000,00
-#  Total Diskon         : Rp1.500,00
-#  Total Kena PPN (10%) : Rp4.350,00
-#  Total Harus Dibayar  : Rp47.850,00
-
-
 def show_invoice(form_results):
     date_now = datetime.datetime.now()
     invoices = {
@@ -56,13 +34,11 @@ def show_invoice(form_results):
                 form_result['order']['total']
             )
             total_results.append(total_result)
-            # total_before_discount += total_result['before_discount']
-            # total_discount += total_result['discount']
-            # total_after_discount += total_result['after_discount']
             total_purchase_amount += total_result['purchase_amount']
             total_price += total_result['price']
             total_ppn += total_result['after_ppn']
     divider('-')
+    
     filter_price_ppn = total_price + total_ppn
     invoices = {
         1: Invoice('Total Pembayaran', format_number(total_price)),
@@ -70,12 +46,13 @@ def show_invoice(form_results):
         3: Invoice('Total Kena PPN (10%)', format_number(total_ppn)),
         4: Invoice('Total Harus Dibayar', format_number(filter_price_ppn - discount_calculate(filter_price_ppn, total_purchase_amount))),
     }
+    
     max_invoice_name_length = max(len(invoice_info.name)
                                   for invoice_info in invoices.values())
+    
     for invoice_id, invoice_info in invoices.items():
         print(
             f" {invoice_info.name:<{max_invoice_name_length}} : {invoice_info.description}")
-
 
 def show_invoice_tile(menu_name, order_name, purchase_amount, price, total):
     divider("-")
