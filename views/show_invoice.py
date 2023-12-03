@@ -5,11 +5,13 @@ from utils.format_date import format_date
 from models.invoice import Invoice
 from views.show_form import discount_calculate
 
+
 def show_invoice(form_results):
     date_now = datetime.datetime.now()
     invoices = {
         1: Invoice('Tanggal', format_date(date_now)),
         2: Invoice('Nama', form_results[0]['order']['name']),
+        3: Invoice('Metode Pembayaran', form_results[0]['payment_method']),
     }
     max_invoice_name_length = max(len(invoice_info.name)
                                   for invoice_info in invoices.values())
@@ -38,7 +40,7 @@ def show_invoice(form_results):
             total_price += total_result['price']
             total_ppn += total_result['after_ppn']
     divider('-')
-    
+
     filter_price_ppn = total_price + total_ppn
     invoices = {
         1: Invoice('Total Pembayaran', format_number(total_price)),
@@ -46,13 +48,14 @@ def show_invoice(form_results):
         3: Invoice('Total Kena PPN (10%)', format_number(total_ppn)),
         4: Invoice('Total Harus Dibayar', format_number(filter_price_ppn - discount_calculate(filter_price_ppn, total_purchase_amount))),
     }
-    
+
     max_invoice_name_length = max(len(invoice_info.name)
                                   for invoice_info in invoices.values())
-    
+
     for invoice_id, invoice_info in invoices.items():
         print(
             f" {invoice_info.name:<{max_invoice_name_length}} : {invoice_info.description}")
+
 
 def show_invoice_tile(menu_name, order_name, purchase_amount, price, total):
     divider("-")

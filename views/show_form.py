@@ -14,7 +14,7 @@ def discount_calculate(price, purchase_amount):
     return discount
 
 
-def order_calculate(list_menu, menu_choice, order_name):
+def order_calculate(list_menu, menu_choice, order_name, payment_method):
     # Dapatkan nama dan harga menu berdasarkan pilihan menu
     menu = list_menu.get(menu_choice)
 
@@ -23,12 +23,9 @@ def order_calculate(list_menu, menu_choice, order_name):
         menu_price = menu.price
         purchase_amount = int(
             input(f" - Jumlah {menu.name} yang ingin dibeli: "))
-        # order_discount_total = discount_calculate(menu.price, purchase_amount)
         price = menu_price * purchase_amount
-        # after_discount = (menu_price * purchase_amount) - order_discount_total
         order_price_total = {
             'price': price,
-            # 'after_discount': after_discount,
             'after_ppn': (menu_price * purchase_amount) * 0.1
         }
 
@@ -41,8 +38,8 @@ def order_calculate(list_menu, menu_choice, order_name):
             'order': {
                 'name': order_name,
                 'total': order_price_total,
-                # 'discount': order_discount_total
             },
+            'payment_method': payment_method,
             'purchase_amount': purchase_amount,
         }
     else:
@@ -52,6 +49,27 @@ def order_calculate(list_menu, menu_choice, order_name):
 
 def show_form(list_menu):
     order_name = input(" - Nama Lengkap : ")
+    payment_method = input(
+        " - Pilih Metode Pembayaran CASH/DEBIT : ")
+    debit_options = ["BCA", "CIMB NIAGA", "BNI", "BRI", "BANK MEGA"]
+    index = 0
+    if (payment_method.lower() == "debit"):
+        for debit_option in debit_options:
+            index = index + 1
+            print(f"   > {index}. {debit_option}")
+        choose_option_debit = int(input(" - Pilih Opsi Debit (numerik) : "))
+        if (choose_option_debit == 1):
+            payment_method = "BCA"
+        elif (choose_option_debit == 2):
+            payment_method = "CIMB NIAGA"
+        elif (choose_option_debit == 3):
+            payment_method = "BNI"
+        elif (choose_option_debit == 4):
+            payment_method = "BRI"
+        elif (choose_option_debit == 5):
+            payment_method = "BANK MEGA"
+        else:
+            payment_method = "CASH"
 
     menu_choices = input(
         " - Nomor menu (pisah dengan koma jika lebih dari 1) : ")
@@ -61,7 +79,8 @@ def show_form(list_menu):
 
     for menu_number in menu_numbers:
         menu_number = int(menu_number.strip())
-        order_result = order_calculate(list_menu, menu_number, order_name)
+        order_result = order_calculate(
+            list_menu, menu_number, order_name, payment_method)
         if order_result['hash_menu']:
             ordered_menus.append(order_result)
 
